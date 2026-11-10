@@ -84,8 +84,8 @@ Use the latest stable release of each library at project start and pin it in the
 | Service | Use | Notes |
 |---|---|---|
 | Wayback CDX API `https://web.archive.org/cdx/search/cdx` | List archived URLs for a domain | Params used: `url`, `matchType`, `output=json`, `fl=timestamp,original,mimetype,statuscode`, `collapse=urlkey`, `from`, `to`, `limit`, `showResumeKey`, `resumeKey`. Paginate with `resumeKey`. |
-| Wayback raw snapshot `https://web.archive.org/web/{timestamp}id_/{url}` | Fetch archived JS as originally served | The `id_` flag returns the original bytes without Wayback's rewriting |
-| Save Page Now `https://web.archive.org/save/` | Demo prep only, done by hand in a browser | Not called by the app |
+| Wayback raw snapshot `https://web.archive.org/web/{timestamp}id_/{url}` | Fetch archived JS as originally served | The `id_` flag returns the original bytes without Wayback's rewriting, **with their original `Content-Encoding`**. The demo site's copies came back gzip on 10 Nov 2026. Decode them, with httpx plus brotli support, and cap the decoded size. |
+| Save Page Now `https://web.archive.org/save/` | Demo prep only, done by hand in a browser | Not called by the app. Needs an archive.org login (checked 10 Nov 2026: "You need to be logged in to use Save Page Now.") |
 
 `[VERIFY: CDX parameter behaviour (matchType=domain, collapse, resumeKey) against the live API docs on day 1; record
 any differences here.]`

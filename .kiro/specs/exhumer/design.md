@@ -117,7 +117,8 @@ registrable domain equals the target's.
 
 ### Property 6: Script limits hold
 *For any* list of script captures, `pick_scripts` returns at most 50 items, includes the newest and oldest of each
-script key while within the limit, and the fetcher never reads more than 2 MiB per snapshot.
+script key while within the limit, and the fetcher never yields more than 2 MiB of **decoded** bytes per snapshot,
+even for a gzip bomb.
 **Validates: Requirements 4.1, 4.2**
 
 ## Error Handling

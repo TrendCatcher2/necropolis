@@ -71,7 +71,9 @@ real page. It then stays awake while it gets traffic, and for 15 minutes after.
 
 ## Archive the history (by hand, in a browser)
 
-1. With `DEMO_FRONTEND=v1` live and awake, open https://web.archive.org/save/ and save each URL separately:
+1. **Log in to archive.org first** (a free account). Save Page Now requires it: on 10 Nov 2026 the API answered "You
+   need to be logged in to use Save Page Now." Then, with `DEMO_FRONTEND=v1` live and awake, open
+   https://web.archive.org/save/ and save each URL separately:
    - `https://<name>.onrender.com/`
    - `https://<name>.onrender.com/static/app.v1.js`
    - `https://<name>.onrender.com/api/v1/users/1`

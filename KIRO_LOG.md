@@ -35,6 +35,17 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
     root. So `rootDir` is unset and the paths start at the repo root, which is the same under both readings.
   - A build filter limits redeploys to `demo-site/` changes.
 
+## 2026-11-10: first archive captures (written outside Kiro)
+
+- The archive needs a logged-in archive.org account for Save Page Now; an anonymous submission was refused.
+- Saving `/` also captured the resources it loads: `app.v1.js`, `/api/v1/users/1` and `/api/v1/status`, all at
+  20261110101636. `/api/v1/users/2`, which the page never loads, was saved on its own at 20261110102038.
+- Playback and the availability API showed the captures within minutes, but the CDX index still listed 0 rows.
+  CDX lags behind.
+- **Raw `id_` copies keep the original `Content-Encoding` (gzip).** A naive check read the bytes undecoded and
+  wrongly reported "not the real content". Exhumer 4.2 now requires decoding, with the 2 MiB cap applied to the
+  decoded bytes (which also blocks gzip bombs).
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew

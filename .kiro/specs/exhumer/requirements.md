@@ -75,7 +75,9 @@ that were only ever called from code are found too.
 1. THE Exhumer SHALL select up to 50 script captures per run: the newest and oldest capture of each distinct script
    key first, then spread evenly over time.
 2. THE Exhumer SHALL fetch each selected script in its raw archived form (`id_` snapshot) and read at most 2 MiB of
-   it.
+   it. It SHALL decode any `Content-Encoding` the archive replays (gzip, deflate, br): raw copies keep the encoding
+   the site originally sent (seen on the demo site on 10 Nov 2026: gzip). The 2 MiB limit SHALL apply to the
+   **decoded** bytes, so a compressed file cannot expand past it.
 3. THE Exhumer SHALL extract candidate paths from string and template literals, and treat them as text only, never
    executing them:
    - strings starting with `/` that contain an API-like segment;
