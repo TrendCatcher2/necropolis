@@ -43,8 +43,9 @@ work around them.
 
 ## 4. What a probe may send
 
-- Method: `HEAD`. Use `GET` only when `HEAD` returns 405 or 501. Never `POST`, `PUT`, `PATCH`, `DELETE` or
-  `OPTIONS`.
+- Method: `HEAD` first. Send one `GET` only when `HEAD` returns 405 or 501, or shows the endpoint is alive (2xx
+  or 5xx). A HEAD response has no body, and the autopsy's body signals need one. Never `POST`, `PUT`, `PATCH`,
+  `DELETE` or `OPTIONS`.
 - No request body. No cookies. No `Authorization` header. No custom headers except `User-Agent` and `Accept`.
 - Path only: the query string is dropped. Templated segments are filled with the most recent value seen in the
   archive for that endpoint, never with generated or guessed values.

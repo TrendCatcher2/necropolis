@@ -63,8 +63,10 @@ The JSON output is a header row followed by data rows. When a resume key exists,
 
 - `first_seen` and `last_seen` cover both CDX captures and JS references.
 - `last_seen_in_frontend` is the maximum script-capture timestamp among the references.
-- The current front end is the set of keys referenced by scripts captured within 30 days of the newest script
-  capture. If the domain has no scripts, zombie candidacy is `unknown`, not `true`.
+- The current front end is the set of keys referenced by the scripts that the newest root-page capture loads
+  (Requirement 4.7). If there is no root-page capture, it falls back to scripts captured within 30 days of the
+  newest script capture. A fixed time window alone failed the demo: v1 and v2 are archived days apart. If the
+  domain has no scripts, zombie candidacy is `unknown`, not `true`.
 
 ## Data Models
 

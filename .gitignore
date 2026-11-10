@@ -6,3 +6,4 @@ data/
 web/dist/
 __pycache__/
 .hypothesis/
+.pytest_cache/

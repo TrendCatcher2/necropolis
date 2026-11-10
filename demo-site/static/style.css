@@ -1,0 +1,9 @@
+:root { color-scheme: dark; --bg: #14161f; --fg: #ece6d6; --muted: #9a9486; --accent: #e8a33d; }
+body { margin: 0; font: 16px/1.5 system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+header, main, footer { max-width: 40rem; margin: 0 auto; padding: 1rem 1.25rem; }
+h1 { margin: 0; color: var(--accent); }
+.tag, footer { color: var(--muted); }
+a { color: var(--accent); }
+button { font: inherit; padding: .4rem .9rem; border-radius: .4rem; border: 1px solid var(--accent);
+         background: transparent; color: var(--fg); cursor: pointer; }
+footer { font-size: .875rem; border-top: 1px solid #2a2d3a; }

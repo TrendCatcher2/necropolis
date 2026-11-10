@@ -96,7 +96,8 @@ answers without loading or changing my systems.
    `not_probeable` and SHALL NOT be guessed.
 2. THE system SHALL send `HEAD` with only the `User-Agent` and `Accept` headers, no body, no cookies, no credentials,
    and no query string.
-3. WHEN `HEAD` returns 405 or 501 THE system SHALL send one `GET` with the same constraints.
+3. WHEN `HEAD` returns 405, 501, 2xx or 5xx THE system SHALL send one `GET` with the same constraints. A HEAD
+   response carries no body, and the body signals need one (found while building the demo site).
 4. THE system SHALL send at most `NECROPOLIS_PROBE_RPS` requests per second per host (default 1, maximum 2), with at
    most 2 in flight per host.
 5. WHEN a response is a redirect THE system SHALL record its target. It SHALL follow it only if the target passes

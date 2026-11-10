@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. Demo site (do this first: the archive needs time to hold history)
-- [ ] 1.1 Build `demo-site/`: v2 front end + v2 API, v1 API with the fake-data zombie, a debug endpoint with a fake
+- [x] 1.1 Build `demo-site/`: v2 front end + v2 API, v1 API with the fake-data zombie, a debug endpoint with a fake
   stack trace, and a v1 endpoint returning 410
   - _Requirements: 8.1, 8.2_
 - [ ] 1.2 Deploy it on our own domain with a v1 front end first; archive the pages and the JS with Save Page Now
@@ -41,7 +41,7 @@
 - [ ] 5.2 Implement `plan_probes` (example paths only, zombie candidates first, cap 500, `not_probeable`)
   - _Requirements: 5.1_
 - [ ] 5.3 Implement `run_probes`:
-  - HEAD, then GET on 405/501
+  - HEAD, then one GET on 405/501/2xx/5xx
   - per-host token bucket, at most 2 in flight
   - redirects re-gated, at most 3 hops
   - 429 pause and single retry

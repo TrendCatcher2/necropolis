@@ -14,8 +14,9 @@ Wayback Machine CDX API, mines archived JavaScript bundles for API paths, normal
 - **Capture**: one CDX row: timestamp, original URL, MIME type, status code.
 - **Exhume run**: one job for one domain, with its options and its results.
 - **Front-end reference**: an endpoint path found inside an archived JS file, with that file's capture timestamp.
-- **Current front end**: the set of endpoints referenced by JS captured within 30 days of the newest JS capture for
-  the domain.
+- **Current front end**: the set of endpoints referenced by the scripts that the newest archived capture of a host's
+  root page (`/`) loads, through same-site `<script src>`. Fallback, if no root-page capture exists: scripts captured
+  within 30 days of the newest script capture.
 - **Zombie candidate**: an `api` endpoint that is not in the current front end.
 
 ## Requirements
@@ -85,6 +86,9 @@ that were only ever called from code are found too.
    resolved against the script's host.
 6. THE Exhumer SHALL record a front-end reference (endpoint key, script key, script capture timestamp) for each
    kept path.
+7. THE Exhumer SHALL fetch the newest raw capture of each in-scope host's root page (at most 2 MiB). It SHALL list
+   that page's same-site `<script src>` URLs, and SHALL always include those scripts in the selection of
+   criterion 4.1. This is how the current front end is known.
 
 ### Requirement 5: Aggregate and date endpoints
 

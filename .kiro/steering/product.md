@@ -30,8 +30,8 @@ endpoints first.
    seen, last seen, and last seen in the front end.
 2. **Prove ownership**: a DNS TXT record (covers the domain and its subdomains) or a file under `/.well-known/`
    (covers that exact host only).
-3. **Raise the dead** (active, verified scope only): one safe request per endpoint. HEAD, then GET only if HEAD is not
-   allowed. No request body, no credentials, rate limited. Each endpoint is classified as gone, guarded, open,
+3. **Raise the dead** (active, verified scope only): one safe request per endpoint. HEAD first, then one GET if HEAD is
+   refused or the endpoint answers (the body is checked in memory, never stored). No request body, no credentials, rate limited. Each endpoint is classified as gone, guarded, open,
    redirected, erroring or unreachable.
 4. **Autopsy**: deterministic risk signals. The endpoint is an older version than the live one, has no auth where its
    siblings need it, returns verbose errors, sits on a debug or admin path, or was removed from the front end but

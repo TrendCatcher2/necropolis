@@ -122,7 +122,7 @@ including IPv4-mapped IPv6), the GuardedClient refuses and the transport records
 
 ### Property 4: Only safe requests are sent
 *For any* sequence of mock responses, every recorded request has method HEAD or GET, no body, no query string, only
-the `User-Agent` and `Accept` headers, and a GET only directly after a HEAD that got 405 or 501.
+the `User-Agent` and `Accept` headers, and a GET only directly after a HEAD that got 405, 501, 2xx or 5xx.
 **Validates: Requirements 5.2, 5.3**
 
 ### Property 5: Limits hold

@@ -20,8 +20,9 @@
   - **Validates: Requirements 2.2, 2.3**
 
 - [ ] 3. JS mining
-- [ ] 3.1 Implement `pick_scripts`
-  - _Requirements: 4.1_
+- [ ] 3.1 Implement `pick_scripts`, plus the newest root-page fetch with `<script src>` extraction (those scripts are
+  always picked)
+  - _Requirements: 4.1, 4.7_
 - [ ] 3.2 Implement `mine_js` with bounded regexes, `${}` → `{id}`, and the same-site filter
   - _Requirements: 4.3, 4.4, 4.5, 4.6_
 - [ ] 3.3 Implement snapshot fetching (`id_`, 2 MiB cap)
