@@ -29,6 +29,11 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   suffixes. Otherwise every Render app would count as one site.
 - The v1 JS now names `/api/v1/debug/trace` as a development leftover. The demo no longer depends on the archive
   saving a 500 page.
+- Added `render.yaml` (Blueprint), validated against Render's published JSON schema
+  (`https://render.com/schema/render.yaml.json`, 0 errors; a typo control was rejected).
+  - Render's docs, and the schema itself, disagree on whether Docker paths are relative to `rootDir` or to the repo
+    root. So `rootDir` is unset and the paths start at the repo root, which is the same under both readings.
+  - A build filter limits redeploys to `demo-site/` changes.
 
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>

@@ -34,23 +34,32 @@ Render's free web services ([docs](https://render.com/docs/free)):
 - give you `https://<name>.onrender.com`;
 - deploy from this GitHub repo.
 
-1. Sign up at https://render.com with **GitHub**, and allow access to the `necropolis` repo.
-2. Go to **New → Web Service** and pick the `TrendCatcher2/necropolis` repo.
-3. Settings:
+**With the Blueprint (recommended).** `render.yaml` at the repo root defines everything.
 
-   | Field | Value |
-   |---|---|
-   | Name | `lantern-lane` (if taken, Render's URL gets a suffix; note the real URL) |
-   | Root Directory | `demo-site` |
-   | Language | **Docker** (Render finds `demo-site/Dockerfile`) |
-   | Instance type | **Free** |
-   | Environment variable | `DEMO_FRONTEND` = `v1` |
+1. Give Render access to the repo. Open https://github.com/settings/installations, find **Render**, click
+   **Configure**, add `TrendCatcher2/necropolis` and save. Alternatively, paste the repo URL under "Public Git
+   Repository" on the Blueprint page; Render then won't auto-deploy when you push.
+2. In Render, go to **New → Blueprint** and pick `TrendCatcher2/necropolis`. Render reads `render.yaml`: one free web
+   service, `lantern-lane`, built from `demo-site/Dockerfile`, with `DEMO_FRONTEND=v1`.
+3. Name the Blueprint (for example `necropolis-demo`) and apply it.
+4. When `lantern-lane` is *Live*, open `https://<name>.onrender.com/`. You should see "Lantern Lane · front end v1"
+   with Casper Example signed in. If the name is taken, Render's URL gets a suffix; note the real URL.
 
-   - The app listens on `$PORT`, which Render sets, so there is no port to configure.
-   - If Docker isn't offered on Free, choose **Python 3** instead, with build command
-     `pip install -r requirements.txt` and start command `uvicorn app:app --host 0.0.0.0 --port $PORT`.
-4. Click **Deploy**. When it says *Live*, open `https://<name>.onrender.com/`. You should see "Lantern Lane · front
-   end v1" with Casper Example signed in.
+**Without the Blueprint.** Go to **New → Web Service**, pick the repo, and use these settings:
+
+| Field | Value |
+|---|---|
+| Name | `lantern-lane` (if taken, Render's URL gets a suffix; note the real URL) |
+| Root Directory | `demo-site` |
+| Language | **Docker** (Render finds `demo-site/Dockerfile`) |
+| Instance type | **Free** |
+| Environment variable | `DEMO_FRONTEND` = `v1` |
+
+- The app listens on `$PORT`, which Render sets, so there is no port to configure.
+- If Docker isn't offered on Free, choose **Python 3** instead, with build command
+  `pip install -r requirements.txt` and start command `uvicorn app:app --host 0.0.0.0 --port $PORT`.
+
+Then click **Deploy**.
 
 Ownership proof for Necropolis: there is no DNS to edit on `onrender.com`, so use the **file proof**. When
 Necropolis gives you a challenge token, add the environment variable `NECROPOLIS_VERIFICATION_TOKEN` = `<token>` on
@@ -73,8 +82,12 @@ real page. It then stays awake while it gets traffic, and for 15 minutes after.
    need saving. The concrete `/users/1` and `/users/2` captures give Necropolis a real path to probe.
 2. Check that the captures exist (this can take a while):
    `curl -s 'https://web.archive.org/cdx/search/cdx?url=<name>.onrender.com/*&output=json&fl=timestamp,original,statuscode&collapse=urlkey'`
-3. A few days later, set `DEMO_FRONTEND` = `v2` on Render (it redeploys). Wake the site, then save
-   `https://<name>.onrender.com/` and `https://<name>.onrender.com/static/app.v2.js`. **Keep the v1 API running.**
+3. A few days later, switch to v2. With the Blueprint, change `value: v1` to `value: v2` in `render.yaml` and push.
+   Change it there, not in the dashboard, because a Blueprint sync could set it back to the value in the file.
+   Without the Blueprint, set `DEMO_FRONTEND` = `v2` in the dashboard.
+   - If the site still shows v1 after a few minutes, run **Manual Deploy** on `lantern-lane`.
+   - Wake the site, then save `https://<name>.onrender.com/` and `https://<name>.onrender.com/static/app.v2.js`.
+   - **Keep the v1 API running.**
 
 ## Other hosts
 

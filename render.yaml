@@ -1,0 +1,20 @@
+# Render Blueprint: deploys the Necropolis demo site (Lantern Lane, a fictional shop) on Render's free tier.
+# In Render: New -> Blueprint -> pick this repo -> Apply. Details and the archive steps: demo-site/README.md
+services:
+  - type: web
+    name: lantern-lane
+    runtime: docker
+    plan: free
+    # Paths from the repo root, and rootDir is left unset on purpose: Render's docs disagree on whether these paths
+    # are relative to rootDir or to the repo root. With rootDir unset, both readings point to the same place.
+    dockerfilePath: ./demo-site/Dockerfile
+    dockerContext: ./demo-site
+    buildFilter:
+      paths:
+        - demo-site/**          # only demo-site changes redeploy it
+    autoDeployTrigger: commit
+    envVars:
+      # v1 first (archive it), then change to v2 HERE and push. Not in the dashboard: a Blueprint sync could flip it
+      # back to the value in this file.
+      - key: DEMO_FRONTEND
+        value: v1
