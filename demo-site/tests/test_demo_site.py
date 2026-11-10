@@ -82,7 +82,8 @@ def test_v2_front_end_never_references_v1():         # the zombie must be missin
 
 def test_v1_front_end_references_v1_api():           # so the archive's JS holds the v1 paths
     js = (STATIC / "app.v1.js").read_text()
-    for p in ("`/api/v1/users/${id}`", '"/api/v1/orders"', '"/api/v1/status"', '"/api/v1/legacy-export"'):
+    for p in ("`/api/v1/users/${id}`", '"/api/v1/orders"', '"/api/v1/status"', '"/api/v1/legacy-export"',
+              '"/api/v1/debug/trace"'):     # in the JS, so the demo never depends on the archive saving a 500 page
         assert p in js
 
 

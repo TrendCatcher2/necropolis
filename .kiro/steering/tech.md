@@ -21,8 +21,11 @@ Use the latest stable release of each library at project start and pin it in the
 - **Pydantic v2** models for everything that crosses a module boundary or goes over the API.
 - **SQLite** (stdlib `sqlite3`, WAL mode) for the archive cache, exhume results, proofs and probe history. One file:
   `data/necropolis.db`. Migrations are numbered SQL files under `backend/necropolis/db/migrations/`.
-- Public suffix handling: **tldextract** with its bundled snapshot, and live list fetching **disabled**
-  (`suffix_list_urls=()`), so it makes no network calls at runtime.
+- Public suffix handling: **tldextract** with its bundled snapshot, live list fetching **disabled**
+  (`suffix_list_urls=()`, so no network calls at runtime), and **private-domain suffixes included**
+  (`include_psl_private_domains=True`). Platform domains such as `onrender.com`, `vercel.app` and `github.io` are
+  in the list's private section. Without this, every app on a platform would count as one site, and the demo runs
+  on `<name>.onrender.com`.
 - Quality: **ruff** (lint and format), **mypy --strict** on `netguard`, `prober`, `ownership` and `normaliser`;
   plain mypy elsewhere.
 - Tests: **pytest**, **Hypothesis** (property-based), **pytest-asyncio**, and httpx `MockTransport`. See

@@ -5,6 +5,8 @@ const api = {
   orders: () => fetch("/api/v1/orders"),
   status: () => fetch("/api/v1/status").then((r) => r.json()),
   exportAll: () => fetch("/api/v1/legacy-export"),
+  // Left over from development: only called when the page is opened with ?debug=1.
+  debugTrace: () => fetch("/api/v1/debug/trace").then((r) => r.text()),
 };
 
 function show(id, text) {
@@ -12,6 +14,9 @@ function show(id, text) {
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
+  if (new URLSearchParams(window.location.search).has("debug")) {
+    api.debugTrace().then((t) => console.log(t));
+  }
   try {
     const me = await api.user(1);
     show("name", me.data.name);

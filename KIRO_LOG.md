@@ -19,6 +19,17 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   2. **The 30-day "current front end" window** would have counted v1 as current, because v1 and v2 are archived days
      apart. The current front end is now the scripts loaded by the newest archived root page (exhumer 4.7).
 
+## 2026-11-10: hosting (written outside Kiro)
+
+- There is no hosting platform and no domain, so the demo site goes on Render's free tier at
+  `<name>.onrender.com`.
+  - It sleeps after 15 minutes idle, so wake it before archiving or probing.
+  - Ownership is proven with the well-known file instead of DNS.
+- `onrender.com` is on the Public Suffix List (private section). `tech.md` now loads tldextract with private
+  suffixes. Otherwise every Render app would count as one site.
+- The v1 JS now names `/api/v1/debug/trace` as a development leftover. The demo no longer depends on the archive
+  saving a 500 page.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew
