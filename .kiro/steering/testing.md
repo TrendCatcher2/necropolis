@@ -43,9 +43,13 @@ inclusion: always
 
 ## Commands
 
+If uv is missing, install it with `pipx install uv` (done on 10 Nov 2026: uv 0.13.7).
+
 ```bash
 cd backend && uv run pytest -q                       # all Python tests
 cd backend && HYPOTHESIS_PROFILE=ci uv run pytest -q tests/property
+cd backend && uv run ruff check . && uv run ruff format --check .
+cd backend && uv run mypy --strict necropolis/normaliser     # also netguard, prober, ownership once they exist
 cd web && npm test                                   # vitest
 cd web && npx playwright test                        # end-to-end demo flow
 ```

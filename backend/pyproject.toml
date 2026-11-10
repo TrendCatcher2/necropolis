@@ -1,0 +1,46 @@
+[project]
+name = "necropolis"
+version = "0.1.0"
+description = "Zombie API Necropolis: find forgotten API endpoints in the archive, prove they are dead, lay them to rest"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+    "idna>=3.20",
+    "pydantic>=2.14.3",
+    "tldextract>=5.4.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "necropolis"
+module-root = ""
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+xfail_strict = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "RUF", "SIM", "PT"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.170.15",
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.4",
+]

@@ -12,7 +12,10 @@ access, and is the most heavily property-tested part of Necropolis.
 - **Normaliser**: the `necropolis.normaliser` module.
 - **Raw URL**: a URL string as found in a CDX row or in archived JS. It can be absolute, scheme-relative or a bare
   path.
-- **EndpointKey**: the normalised identity of an endpoint: `host`, `path_template`, `crypt`, `param_names`.
+- **EndpointKey**: the normalised identity of an endpoint: `host`, `port`, `path_template` and the `crypt` derived
+  from it. It has no scheme and no query, so an old `http` capture, a new `https` capture and a capture with
+  `?ref=mail` are one endpoint. Each capture's scheme, parameter names, kind and example value come back beside the
+  key.
 - **Path template**: the path with variable segments replaced by placeholders: `{id}`, `{uuid}`, `{hash}`, `{token}`,
   `{date}`, `{email}`.
 - **Crypt**: the API version that an endpoint belongs to (`v1`, `v2.1`, or `unversioned`).
@@ -29,12 +32,13 @@ endpoint is not counted many times.
 
 1. WHEN the Normaliser receives a raw URL THE Normaliser SHALL lowercase the scheme and host, convert the host to its
    IDNA (punycode) form, and remove a trailing dot from the host.
-2. WHEN the URL carries the default port for its scheme (80 for http, 443 for https) THE Normaliser SHALL remove the
-   port.
+2. WHEN the URL carries port 80 or 443 THE Normaliser SHALL remove the port. The key has no scheme, so both count as
+   default.
 3. THE Normaliser SHALL remove the fragment, merge repeated slashes, resolve `.` and `..` segments, and remove a
    trailing slash except on the root path `/`.
 4. THE Normaliser SHALL percent-decode only unreserved characters (RFC 3986 section 2.3) and SHALL keep path case
-   unchanged.
+   unchanged. It SHALL write the remaining percent-encodings with uppercase hex digits and percent-encode characters
+   that a path may not contain, so that the canonical form is stable.
 5. WHEN the raw value is a bare path (from JS) THE Normaliser SHALL resolve it against the host it was mined from.
 6. IF the raw value cannot be parsed, uses a scheme other than http or https, or has a host that is an IP literal,
    `localhost` or not under a public suffix THEN THE Normaliser SHALL reject it with a reason code and SHALL NOT
@@ -50,7 +54,7 @@ tombstone, so that the map shows the API's shape and not its data.
 1. THE Normaliser SHALL replace a path segment with a placeholder when it matches exactly one class, checked in this
    order:
    1. UUID → `{uuid}`
-   2. Email address → `{email}`
+   2. Email address → `{email}`, unless its last label is a file extension (`logo@2x.png` stays literal)
    3. ISO date `YYYY-MM-DD` → `{date}`
    4. Integer of 1 to 19 digits → `{id}`
    5. Hex string of 16 or more characters → `{hash}`
@@ -61,7 +65,8 @@ tombstone, so that the map shows the API's shape and not its data.
 3. WHEN two raw URLs differ only in the values of segments that rule 2.1 templates THE Normaliser SHALL return equal
    EndpointKeys.
 4. THE Normaliser SHALL keep, for each EndpointKey, the most recent concrete path as its example value, with query
-   string and fragment removed.
+   string and fragment removed. WHEN the raw value already holds placeholders (a JS path such as
+   `/api/users/{id}`) there is no concrete path, and the example value SHALL be empty.
 
 ### Requirement 3: Query strings never leak values
 
@@ -75,6 +80,10 @@ as reset tokens or API keys never reach storage, the UI or a generated spec.
    value.
 3. WHEN a parameter name is longer than 64 characters or contains characters outside `[A-Za-z0-9_.\-\[\]]` THE
    Normaliser SHALL drop that name.
+4. WHEN a parameter name itself matches a class of rule 2.1 (a bare `?<reset-token>`, `?1234`) THE Normaliser SHALL
+   drop that name, because some sites put the secret where the name goes.
+5. THE Normaliser SHALL drop path parameters: the part of a segment from its first `;`, as in
+   `cart.do;jsessionid=…`. They carry session IDs the way query values do.
 
 ### Requirement 4: Classify crypt and kind
 
@@ -83,7 +92,8 @@ graveyard shows API crypts and not images.
 
 #### Acceptance Criteria
 
-1. THE Normaliser SHALL set `crypt` to the first version segment in the path, or `unversioned` if there is none.
+1. THE Normaliser SHALL set `crypt` to the first version segment in the path, lowercased, or `unversioned` if there
+   is none.
 2. WHEN the path ends in a static asset extension (images, fonts, CSS, media, source maps) THE Normaliser SHALL mark
    the key `kind=static`.
 3. WHEN the path ends in `.js` or `.mjs` THE Normaliser SHALL mark the key `kind=script`, so the exhumer can mine it.

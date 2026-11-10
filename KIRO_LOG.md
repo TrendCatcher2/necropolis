@@ -46,6 +46,49 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   wrongly reported "not the real content". Exhumer 4.2 now requires decoding, with the 2 MiB cap applied to the
   decoded bytes (which also blocks gzip bombs).
 
+## 2026-11-10: endpoint normaliser built (endpoint-normaliser tasks 1 to 6, written outside Kiro)
+
+- Built `backend/` with **Claude Code**:
+  - a uv project (uv 0.13.7, installed with pipx);
+  - `necropolis.normaliser`, split into `parse`, `path`, `segments`, `query`, `kind` and `models`;
+  - 240 tests: an example table per acceptance criterion, Properties 1 to 7 (plus a bare-path round trip and a
+    `*.test` rejection property), and a 25-line regression corpus from the demo site's saved URLs and JS paths.
+- The whole suite passes with `HYPOTHESIS_PROFILE=ci`. `mypy --strict` is clean on the normaliser, and ruff is
+  clean.
+- Building it exposed two spec bugs, both fixed in the specs:
+  1. **The key split one endpoint into several.** It held the scheme, the parameter names and a MIME-based kind.
+     - The spec's own intro example, `/api/v1/users/123?ref=mail` and `/api/v1/users/9876`, would have been two
+       tombstones.
+     - So would an old `http` capture and a new `https` one. The CDX index collapses rows by URL key, which ignores
+       the scheme.
+
+     The key is now host, port, path template and crypt. Scheme, kind, parameter names and example path come back
+     beside it on `Normalised`, and the exhumer's `EndpointRecord` aggregates them.
+  2. **`.test` is not on the Public Suffix List** (checked in tldextract 5.4.0's bundled snapshot). Every `*.test`
+     host the design's strategies were to generate would have been rejected, so they now drive the rejection
+     property instead.
+- Gaps filled in the requirements:
+  - **Path parameters** are dropped (3.5): `cart.do;jsessionid=…` carried session IDs into the key.
+  - **Names that look like values** are dropped (3.4): a bare `?<reset-token>`.
+  - **No email for file names** (2.1): `logo@2x.png` matched the email class.
+  - **Ports and crypts**: ports 80 and 443 both count as default, and crypts are lowercased.
+  - **Example paths**: they are empty for JS paths that hold placeholders.
+  - **Backslashes** make an input `unparseable`, because browsers and urllib disagree on the host.
+- Property tests:
+  - The first implementation passed all seven properties at 50, 300 and 4,000 examples, so they found no bug in it.
+    The one first-run failure was a wrong unit-test expectation: `"a" * 64` is a 64-character hex string, so
+    Req 3.4 rightly drops it as a value-like name.
+  - A mutation check then tested the tests: 17 bugs, planted one at a time in a scratch copy. P1 missed "dot segments
+    resolved before percent-decoding" until its generator also spelled dot segments as `%2E`. P3 now spells
+    unreserved characters as `%XX`.
+  - Every planted bug that changes behaviour is now caught. One planted bug changed nothing, because the static and
+    script extension lists don't overlap.
+- Purity: tldextract and idna load data files on first use, so `parse.py` loads them at import. Property 7 fails if
+  the clock, `random`, the environment, a socket or a file is touched during `normalise()`, or if a module is
+  imported.
+- The token heuristic's cost was measured on 200,000 random base64url tokens: 3.0% of 21-character tokens and 0.7% of
+  32-character tokens stay literal. The design records this.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew

@@ -78,11 +78,18 @@ class EndpointRecord(BaseModel):
     first_seen: datetime; last_seen: datetime; last_seen_in_frontend: datetime | None
     capture_count: int; archived_statuses: set[int]; mimetypes: set[str]
     sources: set[Literal["cdx", "js"]]; example_path: str | None
+    scheme: Literal["http", "https"]   # of the newest capture, like example_path
+    kind: Literal["api", "script", "static", "page"]   # "api" if any capture or reference says so
+    param_names: set[str]              # union over captures and references, names only
     zombie_candidate: bool | None      # None = unknown (no JS history)
 class ExhumeResult(BaseModel):
     status: Literal["complete", "partial", "empty", "cancelled"]; failed_phase: str | None
     endpoints: list[EndpointRecord]; rejected: dict[str, int]; capped: bool
 ```
+
+The normaliser's key has no scheme, query or MIME type (endpoint-normaliser design, "Why the key has no scheme or
+query"), so these per-capture facts are aggregated here. `example_path` comes from the newest capture with a
+concrete path (JS references with placeholders have none), and `scheme` from the newest capture.
 
 SQLite tables: `archive_cache(req_hash PK, body, fetched_at)`, `exhume_runs`, `endpoints(run_id, key_json, ...)`,
 `frontend_refs`.
