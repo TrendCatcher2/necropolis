@@ -1,0 +1,22 @@
+{
+  "pbtResults": {
+    "5.2 Write the property test that the exhumer is passive (recording mock transport, generated hostile data)": {
+      "status": "passed",
+      "lastRunTimestamp": 1794738497306
+    }
+  },
+  "executionHistory": {
+    "5.2 Write the property test that the exhumer is passive (recording mock transport, generated hostile data)": [
+      {
+        "executionId": "5d555174-369c-4797-8730-3b23ee42cc75",
+        "chatSessionId": "sess_0430bb50-f04d-47ec-b2ae-b0f35bfd1ba8",
+        "timestamp": 1794738374260
+      },
+      {
+        "executionId": "5d555174-369c-4797-8730-3b23ee42cc75",
+        "chatSessionId": "sess_0430bb50-f04d-47ec-b2ae-b0f35bfd1ba8",
+        "timestamp": 1794738512004
+      }
+    ]
+  }
+}

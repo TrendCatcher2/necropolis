@@ -44,7 +44,7 @@
 - [ ] 5. Job runner
 - [ ] 5.1 Implement `run_exhume`: phases, the JobBus progress events, partial/empty/cancelled statuses, and saving
   - _Requirements: 6.1, 6.2, 6.3, 6.4_
-- [ ] 5.2 Write the property test that the exhumer is passive (recording mock transport, generated hostile data)
+- [x] 5.2 Write the property test that the exhumer is passive (recording mock transport, generated hostile data)
   - **Property 1: Exhumer is passive**
   - **Validates: Requirement 3.4; safety rule 1**
 - [ ] 5.3 Write an integration test: a full run on the recorded demo-domain fixtures, with the expected zombie
