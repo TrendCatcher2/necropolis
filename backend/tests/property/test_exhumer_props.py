@@ -1,7 +1,7 @@
-"""Correctness properties of .kiro/specs/exhumer/design.md.
+﻿"""Correctness properties of .kiro/specs/exhumer/design.md.
 
 Property 1: Exhumer is passive (this file).
-Properties 2–6: to be added in subsequent tasks.
+Properties 2-6: to be added in subsequent tasks.
 """
 
 from __future__ import annotations
@@ -163,7 +163,7 @@ class RecordingTransport(httpx.AsyncBaseTransport):
 # Feature: exhumer, Property 1: Exhumer is passive
 # Validates: Req exhumer:3.4; safety rule 1
 @given(js_body=_hostile_js_body())
-@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+@settings(suppress_health_check=[HealthCheck.too_slow])
 def test_every_request_goes_to_the_archive_only(js_body: str) -> None:
     """For any generated CDX data and JS bodies (including absolute URLs to arbitrary hosts),
     every request the exhumer makes goes to web.archive.org and nowhere else.
