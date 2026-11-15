@@ -9,9 +9,8 @@ from __future__ import annotations
 import asyncio
 import gzip
 import json
-from collections.abc import Callable
 from datetime import UTC, datetime
-from urllib.parse import quote_plus, urlsplit
+from urllib.parse import urlsplit
 
 import httpx
 import pytest
@@ -128,7 +127,7 @@ class RecordingTransport(httpx.AsyncBaseTransport):
         self._js_body = js_body.encode("utf-8")
 
     async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
-        # Record the full URL *before* any filtering – we want to prove the guard fires before this.
+        # Record the full URL *before* any filtering - we want to prove the guard fires before this.
         self.requested_urls.append(str(request.url))
         path = request.url.path
 
@@ -144,7 +143,7 @@ class RecordingTransport(httpx.AsyncBaseTransport):
 
         # Root-page fetch: return a minimal HTML page with no <script> tags so the
         # frontend phase completes quickly without spawning more snapshot requests.
-        if path.startswith("/web/") and path.endswith("id_/") or "/web/-3" in path:
+        if (path.startswith("/web/") and path.endswith("id_/")) or "/web/-3" in path:
             return httpx.Response(200, stream=httpx.ByteStream(b""))
 
         # CDX query for the newest root page (negative limit)
