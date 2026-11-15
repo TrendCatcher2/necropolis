@@ -123,6 +123,32 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
 - Lesson: a read-only Plan pass over spec plus code gave a task-by-task gap list in one prompt. That list is the
   build order for the next sessions: Prop 1 first, then the fixtures and integration test, then the dating props.
 
+## 2026-11-15: exhumer task 5.2, passive property test (built in Kiro)
+- Surface: **Kiro IDE** on Windows, **Start task** on `tasks.md` 5.2, Supervised mode. Kiro estimated 3.01 credits
+  and 2 min 29 s.
+- Kiro wrote `backend/tests/property/test_exhumer_props.py`:
+  - one Hypothesis property: hostile JS bodies with `fetch`, `axios` and template-literal calls to random non-archive
+    hosts, run through `run_exhume` on a recording transport, asserting every request goes to `web.archive.org`;
+  - unit tests of the `_ArchiveOnly` guard: 6 refused URLs (`http://`, `web.archive.org.evil.com`, `127.0.0.1`,
+    `archive.org` and more) and 1 allowed.
+- Kiro also ticked 5.2 in `tasks.md` and created `tasks.meta.json`, its PBT status record.
+- Checked outside Kiro by planting bugs in a scratch copy and running the property:
+
+  | Planted bug | Property |
+  |---|---|
+  | none | passes |
+  | request to evil.com via the archive client | **fails** (the guard raises) |
+  | the same request with the guard disabled | **fails** (the assertion catches it) |
+  | probing the target's own mined endpoint, guard disabled | **fails** |
+  | request through a fresh `httpx` client | **fails** (the conftest network block) |
+  | leak attempt caught and ignored, guard on | passes. No request left; the guard stopped it |
+  | the same, guard off | **fails** |
+
+  A probe showed the setup does reach JS mining: the hostile script is fetched and the run ends `complete`.
+- Follow-ups for Kiro:
+  - ruff reports 5 small findings in the new file (2 unused imports, 2 en dashes, 1 `and`/`or` precedence);
+  - `max_examples=50` is hard-coded, which overrides the `ci` profile's 300.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew
