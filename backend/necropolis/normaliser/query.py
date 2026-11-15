@@ -22,3 +22,23 @@ def query_names(query: str) -> tuple[str, ...]:
         if _NAME.fullmatch(name) and classify_segment(name) is None:
             names.add(name)
     return tuple(sorted(names))
+
+
+def redact_url(raw: str) -> str:
+    """The URL as text, minus user info, query values and the fragment; kept parameter names stay (Req 3).
+
+    Unlike `normalise`, the path is left as archived. The archive layer stores CDX rows in this form, and
+    `wayback-mcp` shows it (safety.md rule 5: never store or display a query value). Never raises.
+    """
+    text = raw.partition("#")[0]
+    base, question, query = text.partition("?")
+    start = base.find("//")
+    if start != -1:
+        start += 2
+        end = base.find("/", start)
+        end = len(base) if end == -1 else end
+        authority = base[start:end]
+        if "@" in authority:
+            base = base[:start] + authority.rpartition("@")[2] + base[end:]
+    names = query_names(query) if question else ()
+    return base + ("?" + "&".join(names) if names else "")

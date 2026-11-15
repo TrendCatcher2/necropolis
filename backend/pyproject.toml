@@ -5,8 +5,11 @@ description = "Zombie API Necropolis: find forgotten API endpoints in the archiv
 requires-python = ">=3.12"
 license = "MIT"
 dependencies = [
+    "brotli>=1.2.1",
+    "httpx>=0.28.1",
     "idna>=3.20",
     "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.2",
     "tldextract>=5.4.0",
 ]
 
@@ -22,6 +25,8 @@ module-root = ""
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
 xfail_strict = true
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 line-length = 120
@@ -37,10 +42,15 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "RUF", "SIM", "PT"]
 python_version = "3.12"
 plugins = ["pydantic.mypy"]
 
+[[tool.mypy.overrides]]
+module = ["brotli"]  # ships no type information
+ignore_missing_imports = true
+
 [dependency-groups]
 dev = [
     "hypothesis>=6.170.15",
     "mypy>=2.4.1",
     "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1.post1",
     "ruff>=0.17.4",
 ]

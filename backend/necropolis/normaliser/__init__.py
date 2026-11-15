@@ -10,9 +10,9 @@ from collections.abc import Sequence
 
 from necropolis.normaliser.kind import kind_of
 from necropolis.normaliser.models import EndpointKey, Kind, Normalised, Reason, Rejected, Scheme
-from necropolis.normaliser.parse import MAX_LENGTH, parse_url
+from necropolis.normaliser.parse import MAX_LENGTH, is_public_suffix, parse_url, registrable_domain
 from necropolis.normaliser.path import template_path
-from necropolis.normaliser.query import query_names
+from necropolis.normaliser.query import query_names, redact_url
 from necropolis.normaliser.segments import UNVERSIONED, Placeholder, classify_segment, crypt_of, is_version
 
 __all__ = [
@@ -27,8 +27,11 @@ __all__ = [
     "Scheme",
     "classify_segment",
     "crypt_of",
+    "is_public_suffix",
     "is_version",
     "normalise",
+    "redact_url",
+    "registrable_domain",
     "render",
 ]
 

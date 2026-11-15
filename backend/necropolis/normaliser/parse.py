@@ -104,6 +104,24 @@ def check_host(host: str) -> Reason | None:
     return None
 
 
+def registrable_domain(host: str) -> str | None:
+    """The site a canonical host belongs to: its registrable domain, private suffixes included (tech.md).
+
+    `lantern-lane.onrender.com` is its own site, because `onrender.com` is a public suffix. None when the host is
+    not under a public suffix. Used by the exhumer's same-site rule (Req exhumer:4.5).
+    """
+    parts = _PSL(host)
+    if not parts.suffix or not parts.domain:
+        return None
+    return f"{parts.domain}.{parts.suffix}"
+
+
+def is_public_suffix(host: str) -> bool:
+    """True for a suffix itself, such as `co.uk` or `onrender.com`: many sites share it, none owns it."""
+    parts = _PSL(host)
+    return bool(parts.suffix) and not parts.domain
+
+
 def _host_and_port(host_port: str) -> tuple[str, int | None] | Reason:
     if host_port.startswith("["):  # brackets only ever hold an IP literal
         _, bracket, rest = host_port.partition("]")

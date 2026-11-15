@@ -89,6 +89,21 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
 - The token heuristic's cost was measured on 200,000 random base64url tokens: 3.0% of 21-character tokens and 0.7% of
   32-character tokens stay literal. The design records this.
 
+## 2026-11-15: exhumer, first pass (state found and committed)
+- Surface: **Claude Code**, not Kiro. Kiro isn't installed on this machine yet.
+- Found uncommitted from an earlier session:
+  - the archive layer `backend/necropolis/archive/` (client, cache, CDX, decode, replay, timestamps) plus SQLite
+    migrations;
+  - the exhumer modules `backend/necropolis/exhumer/` (target, miner, captures, scripts, aggregate, store, run);
+  - a job bus (`jobs.py`) and settings;
+  - normaliser helpers `registrable_domain`, `is_public_suffix` and `redact_url`.
+- Verified today: 484 tests pass (`HYPOTHESIS_PROFILE=ci`). Fixed 12 ruff findings and 2 `mypy --strict` errors
+  (asserts replaced by explicit errors, one list/tuple variance fix in the client's `params`).
+- Has unit tests: archive client, cache, CDX, decode, `validate_target`, `mine_js`.
+- **No tests yet:** `aggregate`, `captures`, `scripts`, `store`, `run`. The exhumer `tasks.md` boxes are left
+  unticked until each task is checked against its acceptance criteria. The paging, same-site, dating and passivity
+  property tests (2.3, 3.4, 4.2, 5.2) and the fixture-based integration test (1.3, 5.3) are still to write.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew
