@@ -158,6 +158,26 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   read-only **Plan** agent answered the fix request with a plan, not an edit, and it listed only 2 of the 5 ruff
   findings, so run ruff itself rather than trusting the plan's count.
 
+## 2026-11-15: lint fixes in the exhumer props (Kiro agent + hook)
+- Surface: Kiro IDE, default agent, Supervised mode. Commits `f73198b` and `b19ed85`.
+- Asked for 2 fixes. Kiro ran ruff itself, found all 5 findings and fixed them:
+  - 2 unused imports;
+  - 2 en dashes;
+  - the `and`/`or` precedence;
+  - it also removed the hard-coded `max_examples=50`, so the `ci` profile's 300 examples now apply.
+- What went wrong on the way:
+  - a context-gathering sub-agent returned an **invented** version of the file. Kiro noticed it didn't match its
+    own earlier reads and discarded it;
+  - writing the file through PowerShell 5.1 added a UTF-8 BOM.
+- Checked outside Kiro:
+  - the diff touches only those lines;
+  - BOM removed;
+  - `.gitattributes` added (`eol=lf`) so Windows and Kali commits keep LF;
+  - ruff, `mypy --strict` and all **492** tests pass;
+  - the planted "probe the target, guard off" bug still fails the property.
+- Lesson: let ruff (or the hook) produce the findings list rather than trusting a plan's count, and check a
+  sub-agent's file contents against the real file before acting on them.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew

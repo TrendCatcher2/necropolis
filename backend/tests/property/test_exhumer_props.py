@@ -1,4 +1,4 @@
-﻿"""Correctness properties of .kiro/specs/exhumer/design.md.
+"""Correctness properties of .kiro/specs/exhumer/design.md.
 
 Property 1: Exhumer is passive (this file).
 Properties 2-6: to be added in subsequent tasks.
