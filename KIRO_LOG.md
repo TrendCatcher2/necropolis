@@ -104,6 +104,25 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   unticked until each task is checked against its acceptance criteria. The paging, same-site, dating and passivity
   property tests (2.3, 3.4, 4.2, 5.2) and the fixture-based integration test (1.3, 5.3) are still to write.
 
+## 2026-11-15: exhumer spec review (first Kiro session)
+- Surface: **Kiro IDE 1.4.154** on Windows, built-in **Plan** agent, Supervised mode, model Auto. No files changed.
+- Asked: review `.kiro/specs/exhumer/` against `backend/necropolis/exhumer/` and `archive/`, and give each task a
+  status of done, partly done or missing.
+- Kiro found:
+  - done: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 3.3, 4.1, 5.1;
+  - missing: 1.3 (`scripts/record_fixtures.py`, `tests/fixtures/archive/`), the property tests 2.3, 3.4, 4.2 and
+    5.2 (no `tests/property/test_exhumer_props.py`), the integration test 5.3 and checkpoint 6.
+- Its top gaps:
+  1. none of the exhumer's Hypothesis properties are written;
+  2. the fixture recorder is missing, even though `RecordingTransport` and `ReplayTransport` exist;
+  3. there is no integration test of `run_exhume`;
+  4. there is no property test that the exhumer is passive (Prop 1, the safety one);
+  5. `aggregate` has no tests for Props 3 and 4.
+- Cross-checked in a shell: every missing file it named is in fact missing. One correction: 4.1 and 5.1 are
+  written but **unverified**, because no test exercises them yet, so their boxes stay unticked.
+- Lesson: a read-only Plan pass over spec plus code gave a task-by-task gap list in one prompt. That list is the
+  build order for the next sessions: Prop 1 first, then the fixtures and integration test, then the dating props.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew
