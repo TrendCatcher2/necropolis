@@ -149,6 +149,15 @@ For each entry, say what you asked, what Kiro changed, and what a hook, test or 
   - ruff reports 5 small findings in the new file (2 unused imports, 2 en dashes, 1 `and`/`or` precedence);
   - `max_examples=50` is hard-coded, which overrides the `ci` profile's 300.
 
+## 2026-11-15: first agent hook, ruff on save
+- Surface: Kiro IDE, Agent Hooks UI. File: `.kiro/hooks/ruff-lint-on-save.json`.
+- Trigger `PostFileSave`, matcher `backend/.*\.py$`, action type **command**: `uv run --directory backend ruff check --fix`.
+- First draft: the action was **Ask Kiro** with a one-off prompt pasted into the instructions. That would spend
+  agent credits on every save. Switched to a plain command, which runs for free.
+- Lesson: hooks that only lint should be command hooks; save "Ask Kiro" hooks for work that needs judgement. The
+  read-only **Plan** agent answered the fix request with a plan, not an edit, and it listed only 2 of the 5 ruff
+  findings, so run ruff itself rather than trusting the plan's count.
+
 <!-- Entry template
 ## YYYY-MM-DD: <spec or task>
 - Surface: IDE / CLI / Crew
