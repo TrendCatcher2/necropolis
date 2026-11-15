@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Ruff lint on save",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "uv run --directory backend ruff check --fix"
+      },
+      "description": "When a Python file under backend/ is saved, run ruff check --fix on it via uv from the backend directory.",
+      "matcher": "backend/.*\\.py$",
+      "enabled": true
+    }
+  ]
+}
